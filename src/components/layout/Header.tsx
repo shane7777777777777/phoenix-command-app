@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, FileText, Users } from 'lucide-react';
+import { BookOpen, Clock, FileText, Users } from 'lucide-react';
 import { colors, typography, gradients, shadows, touchTarget, borderRadius, spacing } from '../../theme/tokens';
 import type { Screen } from '../../types';
 
@@ -12,6 +12,7 @@ interface HeaderProps {
 
 const navItems: { id: Screen; label: string; icon: typeof Clock | null }[] = [
   { id: 'dashboard', label: 'HOME', icon: null },
+  { id: 'knowledgebuilder', label: 'KNOWLEDGE', icon: BookOpen },
   { id: 'files', label: 'FILES', icon: FileText },
   { id: 'teams', label: 'TEAMS', icon: Users },
   { id: 'timeclock', label: 'TIME CLOCK', icon: Clock },

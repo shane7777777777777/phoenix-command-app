@@ -250,7 +250,7 @@ const PhoenixCommandApp = () => {
         />
       )}
       {currentScreen === 'knowledgebuilder' && (
-        <KnowledgeBuilder token={null} />
+        <KnowledgeBuilder />
       )}
 
       <ChatWidget

@@ -14,6 +14,7 @@ import TimeClockScreen from './screens/TimeClockScreen';
 import FilesScreen from './screens/FilesScreen';
 import TeamsScreen from './screens/TeamsScreen';
 import DailyLogScreen from './screens/DailyLogScreen';
+import KnowledgeBuilderScreen from './screens/KnowledgeBuilderScreen';
 
 // Chat
 import ChatWidget from './components/chat/ChatWidget';
@@ -219,6 +220,9 @@ const PhoenixCommandApp: React.FC = () => {
           onSubmit={handleSubmitLog}
           onNavigate={setCurrentScreen}
         />
+      )}
+      {currentScreen === 'knowledgebuilder' && (
+        <KnowledgeBuilderScreen getApiToken={getApiToken} />
       )}
 
       <ChatWidget

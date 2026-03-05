@@ -3,14 +3,17 @@
  * Connects to Azure Functions for NEC daily teaching content
  */
 
+import type { DailyHuddle, KnowledgeItem, KnowledgeBuilderStats } from '../types/knowledge-builder';
+
 const API_BASE = import.meta.env.VITE_API_BASE || "https://phoenix-command-func.azurewebsites.net/api";
 const FUNCTION_KEY = import.meta.env.VITE_FUNCTION_KEY || "";
+const IS_DEV = import.meta.env.DEV;
 
 // ============================================================================
 // MOCK DATA — 3 Realistic NEC Items
 // ============================================================================
 
-const MOCK_DATA = {
+const MOCK_DATA: DailyHuddle = {
   date: new Date().toISOString().split('T')[0],
   weekTheme: 'GFCI & Grounding Fundamentals',
   teaserTopic: 'Voltage Drop Calculations',
@@ -91,87 +94,105 @@ const MOCK_DATA = {
 };
 
 // ============================================================================
+// HELPERS
+// ============================================================================
+
+function buildHeaders(token: string | null): Record<string, string> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (FUNCTION_KEY) headers['x-functions-key'] = FUNCTION_KEY;
+  return headers;
+}
+
+function warnMockFallback(context: string, err: unknown): void {
+  if (IS_DEV) {
+    console.warn(`[KnowledgeBuilder] ${context} — falling back to mock data:`, err);
+  } else {
+    console.warn(`[KnowledgeBuilder] ${context} — API unavailable, showing offline content.`);
+  }
+}
+
+// ============================================================================
 // API FUNCTIONS
 // ============================================================================
 
 /**
- * Fetch the daily huddle of NEC teaching items
- * @param {string} token - Bearer access token
+ * Fetch the daily huddle of NEC teaching items.
+ * Falls back to MOCK_DATA when the API is unavailable.
+ * @param token - Bearer access token (omitted from request when null/empty)
  */
-export async function fetchDailyHuddle(token) {
+export async function fetchDailyHuddle(token: string | null): Promise<DailyHuddle> {
   try {
     const response = await fetch(`${API_BASE}/knowledge-builder/daily`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        ...(FUNCTION_KEY && { 'x-functions-key': FUNCTION_KEY }),
-      },
+      headers: buildHeaders(token),
     });
 
     if (!response.ok) {
       throw new Error(`Daily huddle fetch failed: ${response.statusText}`);
     }
 
-    return response.json();
-  } catch {
-    // Fall back to mock data when API is unavailable
+    return response.json() as Promise<DailyHuddle>;
+  } catch (err) {
+    warnMockFallback('fetchDailyHuddle', err);
     return MOCK_DATA;
   }
 }
 
 /**
- * Fetch archive of past knowledge items
- * @param {string} token - Bearer access token
- * @param {object} filters - Optional filters (topicTags, dateRange, etc.)
+ * Fetch archive of past knowledge items.
+ * Falls back to MOCK_DATA items when the API is unavailable.
+ * @param token - Bearer access token (omitted from request when null/empty)
+ * @param filters - Optional query filters (topicTags, dateRange, etc.)
  */
-export async function fetchArchive(token, filters = {}) {
+export async function fetchArchive(
+  token: string | null,
+  filters: Record<string, string | number | boolean> = {},
+): Promise<{ items: KnowledgeItem[]; total: number }> {
   const params = new URLSearchParams(
-    Object.entries(filters).filter(([, v]) => v !== undefined && v !== null).map(([k, v]) => [k, String(v)])
+    Object.entries(filters)
+      .filter(([, v]) => v !== undefined && v !== null)
+      .map(([k, v]) => [k, String(v)]),
   );
   const url = `${API_BASE}/knowledge-builder/archive${params.toString() ? `?${params}` : ''}`;
 
   try {
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        ...(FUNCTION_KEY && { 'x-functions-key': FUNCTION_KEY }),
-      },
+      headers: buildHeaders(token),
     });
 
     if (!response.ok) {
       throw new Error(`Archive fetch failed: ${response.statusText}`);
     }
 
-    return response.json();
-  } catch {
-    return { items: [...MOCK_DATA.items, MOCK_DATA.backup].filter(Boolean), total: 3 };
+    return response.json() as Promise<{ items: KnowledgeItem[]; total: number }>;
+  } catch (err) {
+    warnMockFallback('fetchArchive', err);
+    const items = [...MOCK_DATA.items, MOCK_DATA.backup].filter((i): i is KnowledgeItem => i !== null);
+    return { items, total: items.length };
   }
 }
 
 /**
- * Fetch knowledge builder stats
- * @param {string} token - Bearer access token
+ * Fetch knowledge builder stats.
+ * Falls back to derived mock stats when the API is unavailable.
+ * @param token - Bearer access token (omitted from request when null/empty)
  */
-export async function fetchStats(token) {
+export async function fetchStats(token: string | null): Promise<KnowledgeBuilderStats> {
   try {
     const response = await fetch(`${API_BASE}/knowledge-builder/stats`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        ...(FUNCTION_KEY && { 'x-functions-key': FUNCTION_KEY }),
-      },
+      headers: buildHeaders(token),
     });
 
     if (!response.ok) {
       throw new Error(`Stats fetch failed: ${response.statusText}`);
     }
 
-    return response.json();
-  } catch {
+    return response.json() as Promise<KnowledgeBuilderStats>;
+  } catch (err) {
+    warnMockFallback('fetchStats', err);
     return {
       totalItems: 3,
       topicDistribution: {

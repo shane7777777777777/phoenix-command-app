@@ -2,11 +2,11 @@ import React from 'react';
 import KnowledgeBuilder from '../components/KnowledgeBuilder';
 
 interface KnowledgeBuilderScreenProps {
-  token?: string;
+  getApiToken?: () => Promise<string>;
 }
 
-const KnowledgeBuilderScreen: React.FC<KnowledgeBuilderScreenProps> = ({ token }) => (
-  <KnowledgeBuilder token={token} />
+const KnowledgeBuilderScreen: React.FC<KnowledgeBuilderScreenProps> = ({ getApiToken }) => (
+  <KnowledgeBuilder getApiToken={getApiToken} />
 );
 
 export default KnowledgeBuilderScreen;

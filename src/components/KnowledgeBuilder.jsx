@@ -5,12 +5,26 @@ import { colors, gradients, shadows, spacing, borderRadius, touchTarget } from '
 import { fetchDailyHuddle, fetchStats } from '../api/knowledge-builder-api';
 
 /**
+ * Validate that a URL uses http or https before rendering in an anchor.
+ * Returns '#' for any other scheme to prevent javascript: injection.
+ */
+function sanitizeUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:' ? url : '#';
+  } catch {
+    return '#';
+  }
+}
+
+/**
  * KnowledgeBuilder — Daily NEC teaching system for Phoenix Electric.
  *
  * Props:
- *   token - Bearer access token for API calls
+ *   getApiToken - Optional async function that returns a Bearer access token.
+ *                 When omitted the component loads content without auth.
  */
-const KnowledgeBuilder = ({ token }) => {
+const KnowledgeBuilder = ({ getApiToken }) => {
   const [dailyHuddle, setDailyHuddle] = useState(null);
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,10 +34,15 @@ const KnowledgeBuilder = ({ token }) => {
   useEffect(() => {
     const load = async () => {
       try {
+        setError(null);
         setIsLoading(true);
+        let token = null;
+        if (getApiToken) {
+          try { token = await getApiToken(); } catch (authErr) { console.warn('[KnowledgeBuilder] Auth token retrieval failed, loading without auth:', authErr); }
+        }
         const [data, statsData] = await Promise.all([
-          fetchDailyHuddle(token || ''),
-          fetchStats(token || ''),
+          fetchDailyHuddle(token),
+          fetchStats(token),
         ]);
         setDailyHuddle(data);
         setStats(statsData);
@@ -34,7 +53,7 @@ const KnowledgeBuilder = ({ token }) => {
       }
     };
     load();
-  }, [token]);
+  }, [getApiToken]);
 
   const toggleAnswer = (id) => {
     setRevealedAnswers((prev) => {
@@ -149,7 +168,7 @@ const KnowledgeBuilder = ({ token }) => {
             {item.title}
           </div>
           <a
-            href={item.sourceUrl}
+            href={sanitizeUrl(item.sourceUrl)}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -184,6 +203,23 @@ const KnowledgeBuilder = ({ token }) => {
         }}>
           {item.question}
         </div>
+
+        {/* Answer choices */}
+        {Array.isArray(item.answerChoices) && item.answerChoices.length > 0 && (
+          <ul style={{
+            margin: `0 0 ${spacing.md}px 0`,
+            paddingLeft: '20px',
+            fontSize: '14px',
+            color: 'rgba(255,255,255,0.8)',
+            lineHeight: '1.8',
+          }}>
+            {item.answerChoices.map((choice, index) => (
+              <li key={index} style={{ marginBottom: '4px' }}>
+                {choice}
+              </li>
+            ))}
+          </ul>
+        )}
 
         {/* Reveal button */}
         <button
@@ -359,31 +395,32 @@ const KnowledgeBuilder = ({ token }) => {
         </div>
       )}
 
-      {/* Archive button */}
+      {/* Archive button — disabled until archive screen is implemented */}
       <button
+        disabled
         style={{
           width: '100%',
           padding: '14px',
-          background: gradients.goldButton,
-          color: '#1a1a1a',
+          background: 'rgba(212,175,55,0.3)',
+          color: 'rgba(26,26,26,0.6)',
           border: 'none',
           borderRadius: `${borderRadius.lg}px`,
           fontSize: '14px',
           fontWeight: '700',
-          cursor: 'pointer',
+          cursor: 'not-allowed',
           textTransform: 'uppercase',
           letterSpacing: '1px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: `${spacing.sm}px`,
-          boxShadow: shadows.goldButton,
           minHeight: `${touchTarget.minHeight}px`,
           marginBottom: '20px',
+          opacity: 0.6,
         }}
       >
         <Search size={18} />
-        VIEW ARCHIVE
+        VIEW ARCHIVE (COMING SOON)
       </button>
 
       {/* Stats footer */}

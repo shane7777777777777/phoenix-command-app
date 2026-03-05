@@ -45,7 +45,7 @@ export interface DailyHuddle {
 
 export interface KnowledgeBuilderStats {
   totalItems: number;
-  topicDistribution: Record<TopicTag, number>;
+  topicDistribution: Partial<Record<TopicTag, number>>;
   lastCollectionDate: string;
   sourceErrors: number;
   itemsServedThisWeek: number;
