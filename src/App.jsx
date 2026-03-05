@@ -3,6 +3,7 @@ import { useMsal, useIsAuthenticated } from '@azure/msal-react';
 import { InteractionStatus, InteractionRequiredAuthError } from '@azure/msal-browser';
 import { loginRequest, apiRequest } from './auth/msalConfig';
 import { clockInOut, submitDailyLog, askPhoenixAI, getCurrentLocation } from './api/phoenix-api';
+import { LanguageProvider } from './i18n/LanguageContext';
 
 // Components
 import SplashScreen from './components/SplashScreen';
@@ -156,11 +157,17 @@ const PhoenixCommandApp = () => {
   const handleSubmitLog = async (logData) => {
     const token = await getApiToken();
     await submitDailyLog({
-      customer: logData.customer,
-      jobNumber: logData.jobNumber,
-      hours: logData.hours,
-      workCompleted: logData.workCompleted,
-      issues: logData.issues
+      date: logData.date,
+      technicianName: logData.technicianName,
+      jobAddress: logData.jobAddress,
+      phase: logData.phase,
+      completedWork: logData.completedWork,
+      incompleteWork: logData.incompleteWork,
+      notes: logData.notes,
+      materialNeeded: logData.materialNeeded,
+      techSignature: logData.techSignature,
+      leadSignature: logData.leadSignature,
+      photos: logData.photos
     }, token);
   };
 
@@ -209,6 +216,7 @@ const PhoenixCommandApp = () => {
   }
 
   return (
+    <LanguageProvider>
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       <TopMenu
         userName={userName}
@@ -242,8 +250,7 @@ const PhoenixCommandApp = () => {
       {currentScreen === 'teams' && <TeamsScreen />}
       {currentScreen === 'dailylog' && (
         <DailyLog
-          customers={customers}
-          jobs={jobs}
+          userName={userName}
           onSubmit={handleSubmitLog}
           onNavigate={setCurrentScreen}
         />
@@ -258,6 +265,7 @@ const PhoenixCommandApp = () => {
         onSend={handleChatSend}
       />
     </div>
+    </LanguageProvider>
   );
 };
 
