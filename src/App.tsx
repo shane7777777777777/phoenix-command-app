@@ -155,11 +155,11 @@ const PhoenixCommandApp: React.FC = () => {
   const handleSubmitLog = async (logData: DailyLogFormData) => {
     const token = await getApiToken();
     await submitDailyLog({
-      customer: logData.customer,
-      jobNumber: logData.jobNumber,
-      hours: logData.hours,
-      workCompleted: logData.workCompleted,
-      issues: logData.issues,
+      customer: logData.customer || '',
+      jobNumber: logData.jobNumber || '',
+      hours: logData.hours || 0,
+      workCompleted: logData.workCompleted || '',
+      issues: logData.issues || '',
     }, token);
   };
 

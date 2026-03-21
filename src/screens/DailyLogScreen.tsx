@@ -14,6 +14,17 @@ interface DailyLogScreenProps {
 
 const DailyLogScreen: React.FC<DailyLogScreenProps> = ({ customers, jobs, onSubmit, onNavigate }) => {
   const [logData, setLogData] = useState<DailyLogFormData>({
+    date: new Date().toISOString().split('T')[0],
+    technicianName: '',
+    jobAddress: '',
+    phase: 'rough-in',
+    completedWork: [],
+    incompleteWork: [],
+    notes: '',
+    materialNeeded: '',
+    techSignature: '',
+    leadSignature: '',
+    photos: [],
     customer: '',
     jobNumber: '',
     hours: 0,
@@ -27,7 +38,7 @@ const DailyLogScreen: React.FC<DailyLogScreenProps> = ({ customers, jobs, onSubm
       alert('Please select a customer and job number.');
       return;
     }
-    if (!logData.workCompleted.trim()) {
+    if (!logData.workCompleted?.trim()) {
       alert('Please describe the work completed.');
       return;
     }

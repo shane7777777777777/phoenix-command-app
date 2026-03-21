@@ -97,7 +97,7 @@ export async function register(): Promise<boolean> {
     if (VAPID_PUBLIC_KEY) {
       const subscription = await swRegistration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as unknown as ArrayBuffer,
       });
 
       // TODO(gateway): POST subscription to backend
@@ -157,7 +157,6 @@ export async function showLocalNotification(
     badge: '/phoenix-logo.png',
     tag: tagMap[category],
     data: { category, ...data },
-    vibrate: category === 'urgent' ? [200, 100, 200, 100, 200] : [200, 100, 200],
     requireInteraction: category === 'urgent' || category === 'dispatch',
   });
 }
