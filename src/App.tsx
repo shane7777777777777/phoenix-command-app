@@ -6,6 +6,7 @@ import { colors, typography } from './theme/tokens';
 
 // Layout
 import Header from './components/layout/Header';
+import BottomNav from './components/layout/BottomNav';
 
 // Screens
 import SplashScreen from './screens/SplashScreen';
@@ -14,6 +15,9 @@ import TimeClockScreen from './screens/TimeClockScreen';
 import FilesScreen from './screens/FilesScreen';
 import TeamsScreen from './screens/TeamsScreen';
 import DailyLogScreen from './screens/DailyLogScreen';
+import DispatchScreen from './screens/DispatchScreen';
+import KnowledgeScreen from './screens/KnowledgeScreen';
+import ScheduleScreen from './screens/ScheduleScreen';
 
 // Chat
 import ChatWidget from './components/chat/ChatWidget';
@@ -24,9 +28,14 @@ import type { Screen, ChatMessage, DailyLogFormData } from './types';
 // ============================================================================
 // PHOENIX COMMAND APP - Component Architecture
 // Built for: Shane Warehime, Phoenix Electric
-// Refactored: February 2026 — TypeScript + component extraction
+// Refactored: February 2026 -- TypeScript + component extraction
 // All state management and auth logic remains here in App.tsx
 // ============================================================================
+
+// TODO(gateway): Initialize EchoGatewayClient on app mount
+// import { connect as gatewayConnect, cleanup as gatewayCleanup } from './gateway/EchoGatewayClient';
+// TODO(gateway): Initialize PushNotificationService
+// import { register as registerPush, cleanup as pushCleanup } from './services/PushNotificationService';
 
 const PhoenixCommandApp: React.FC = () => {
   const {
@@ -62,8 +71,25 @@ const PhoenixCommandApp: React.FC = () => {
     if (isAuthenticated) {
       setUserName(authUserName);
       setCurrentScreen('dashboard');
+
+      // TODO(gateway): Connect to Echo Gateway with auth token
+      // getApiToken().then((token) => {
+      //   gatewayConnect(token);
+      //   setAuthToken(token); // echo-api
+      // });
+
+      // TODO(gateway): Register push notifications
+      // registerPush();
     }
   }, [isAuthenticated, authUserName]);
+
+  // TODO(gateway): Cleanup on unmount
+  // useEffect(() => {
+  //   return () => {
+  //     gatewayCleanup();
+  //     pushCleanup();
+  //   };
+  // }, []);
 
   // Handle login with loading state
   const onLogin = async () => {
@@ -110,6 +136,7 @@ const PhoenixCommandApp: React.FC = () => {
 
     try {
       const token = await getApiToken();
+      // TODO(gateway): Use sendChat() via WebSocket for real-time responses
       const response = await askPhoenixAI(userMessage, ['knowledge_keeper', 'servicefusion'], token);
       setChatMessages(prev => [...prev, {
         role: 'ai',
@@ -181,7 +208,7 @@ const PhoenixCommandApp: React.FC = () => {
   }
 
   return (
-    <div style={{ fontFamily: typography.fontPrimary }}>
+    <div style={{ fontFamily: typography.fontPrimary, paddingBottom: '80px' }}>
       <Header
         userName={userName}
         currentScreen={currentScreen}
@@ -220,6 +247,13 @@ const PhoenixCommandApp: React.FC = () => {
           onNavigate={setCurrentScreen}
         />
       )}
+      {currentScreen === 'dispatch' && (
+        <DispatchScreen onNavigate={(s) => setCurrentScreen(s as Screen)} />
+      )}
+      {currentScreen === 'knowledge' && <KnowledgeScreen />}
+      {currentScreen === 'schedule' && <ScheduleScreen />}
+
+      <BottomNav currentScreen={currentScreen} onNavigate={setCurrentScreen} />
 
       <ChatWidget
         showChatWidget={showChatWidget}
@@ -234,4 +268,3 @@ const PhoenixCommandApp: React.FC = () => {
 };
 
 export default PhoenixCommandApp;
-

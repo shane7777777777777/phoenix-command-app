@@ -1,32 +1,33 @@
 // ============================================================================
-// PHOENIX COMMAND — Design Tokens
+// PHOENIX COMMAND -- Design Tokens
 // Single source of truth for all visual constants
+// All CSS custom properties use --px- prefix (see index.css)
 // ============================================================================
 
 export const colors = {
-  primary: '#FF1A1A',        // Phoenix Red
-  accent: '#D4AF37',         // Gold
-  background: '#0a0a0a',     // Near-black
-  surface: '#1a1a1a',        // Card/panel bg
-  surfaceHover: '#2a2a2a',
-  text: '#FFFFFF',
-  textSecondary: 'rgba(255,255,255,0.5)',
-  textTertiary: 'rgba(255,255,255,0.4)',
-  textMuted: 'rgba(255,255,255,0.35)',
-  textSubtle: 'rgba(255,255,255,0.3)',
-  border: 'rgba(255,255,255,0.15)',
-  borderRed: 'rgba(255,100,100,0.15)',
+  primary: '#FF1A1A',        // Phoenix Red  (--px-color-primary)
+  accent: '#D4AF37',         // Gold         (--px-color-accent)
+  background: '#0a0a0a',     // Near-black   (--px-color-background)
+  surface: '#1a1a1a',        // Card/panel   (--px-color-surface)
+  surfaceHover: '#2a2a2a',   //              (--px-color-surface-hover)
+  text: '#FFFFFF',           //              (--px-color-text)
+  textSecondary: 'rgba(255,255,255,0.5)',   // (--px-color-text-secondary)
+  textTertiary: 'rgba(255,255,255,0.4)',    // (--px-color-text-tertiary)
+  textMuted: 'rgba(255,255,255,0.35)',      // (--px-color-text-muted)
+  textSubtle: 'rgba(255,255,255,0.3)',      // (--px-color-text-subtle)
+  border: 'rgba(255,255,255,0.15)',         // (--px-color-border)
+  borderRed: 'rgba(255,100,100,0.15)',      // (--px-color-border-red)
   borderRedHover: 'rgba(255,100,100,0.2)',
-  borderGold: 'rgba(212,175,55,0.3)',
+  borderGold: 'rgba(212,175,55,0.3)',       // (--px-color-border-gold)
   borderGoldHover: 'rgba(212,175,55,0.5)',
   borderWhiteSubtle: 'rgba(255,255,255,0.08)',
   borderWhiteLight: 'rgba(255,255,255,0.1)',
   borderWhiteMed: 'rgba(255,255,255,0.2)',
   borderWhiteHeavy: 'rgba(255,255,255,0.3)',
-  success: '#00C9A7',
+  success: '#00C9A7',        //              (--px-color-success)
   successGlow: 'rgba(0,201,167,0.6)',
-  warning: '#F59E0B',
-  danger: '#EF4444',
+  warning: '#F59E0B',        //              (--px-color-warning)
+  danger: '#EF4444',         //              (--px-color-danger)
   dangerDark: 'rgba(220,20,60,0.9)',
   glassWhite: 'rgba(255,255,255,0.05)',
   glassWhiteHover: 'rgba(255,255,255,0.08)',
@@ -37,17 +38,17 @@ export const colors = {
 } as const;
 
 export const spacing = {
-  xs: 4,
-  sm: 8,
-  md: 16,
-  lg: 24,
-  xl: 32,
-  xxl: 48,
+  xs: 4,   // --px-spacing-xs
+  sm: 8,   // --px-spacing-sm
+  md: 16,  // --px-spacing-md
+  lg: 24,  // --px-spacing-lg
+  xl: 32,  // --px-spacing-xl
+  xxl: 48, // --px-spacing-xxl
 } as const;
 
 export const typography = {
-  fontPrimary: 'Inter, system-ui, sans-serif',
-  fontDisplay: 'Cinzel, Georgia, serif',
+  fontPrimary: 'Inter, system-ui, sans-serif',   // --px-font-primary
+  fontDisplay: 'Cinzel, Georgia, serif',          // --px-font-display
   h1: { fontSize: '32px', fontWeight: '700' as const, letterSpacing: '3px' },
   h2: { fontSize: '24px', fontWeight: '600' as const, letterSpacing: '2px' },
   h3: { fontSize: '18px', fontWeight: '600' as const },
@@ -59,18 +60,18 @@ export const typography = {
 } as const;
 
 export const touchTarget = {
-  minHeight: 56,
+  minHeight: 56,  // --px-touch-min
   minWidth: 56,
   padding: spacing.md,
 } as const;
 
 export const borderRadius = {
-  sm: 6,
-  md: 8,
-  lg: 10,
-  xl: 12,
-  xxl: 16,
-  pill: 24,
+  sm: 6,     // --px-radius-sm
+  md: 8,     // --px-radius-md
+  lg: 10,    // --px-radius-lg
+  xl: 12,    // --px-radius-xl
+  xxl: 16,   // --px-radius-xxl
+  pill: 24,  // --px-radius-pill
   full: 9999,
 } as const;
 
@@ -93,10 +94,10 @@ export const gradients = {
 } as const;
 
 export const shadows = {
-  card: 'inset 0 0 20px rgba(255,50,50,0.03), 0 8px 32px rgba(0,0,0,0.3)',
-  header: '0 4px 20px rgba(0,0,0,0.4)',
-  redButton: '0 4px 20px rgba(255,26,26,0.3)',
-  goldButton: '0 4px 20px rgba(212,175,55,0.3)',
+  card: 'inset 0 0 20px rgba(255,50,50,0.03), 0 8px 32px rgba(0,0,0,0.3)',  // --px-shadow-card
+  header: '0 4px 20px rgba(0,0,0,0.4)',   // --px-shadow-header
+  redButton: '0 4px 20px rgba(255,26,26,0.3)',   // --px-shadow-button-red
+  goldButton: '0 4px 20px rgba(212,175,55,0.3)',  // --px-shadow-button-gold
   clockIn: '0 4px 20px rgba(0,201,167,0.3)',
   clockOut: '0 4px 20px rgba(220,20,60,0.3)',
   chatFab: '0 4px 20px rgba(255,26,26,0.4), 0 0 40px rgba(255,26,26,0.2)',
@@ -108,4 +109,3 @@ export const shadows = {
   logo: '0 2px 8px rgba(0,0,0,0.3)',
   avatar: '0 2px 8px rgba(0,0,0,0.3)',
 } as const;
-

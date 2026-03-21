@@ -1,6 +1,7 @@
 // ============================================================================
-// PHOENIX COMMAND — Shared Style Objects
+// PHOENIX COMMAND -- Shared Style Objects
 // Composed from tokens, imported by components
+// CSS custom properties available via --px-* prefix (see index.css)
 // ============================================================================
 
 import React from 'react';
@@ -123,4 +124,3 @@ export const labelStyle: React.CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: typography.captionSmall.letterSpacing,
 };
-

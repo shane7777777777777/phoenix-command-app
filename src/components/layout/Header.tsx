@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, FileText, Users } from 'lucide-react';
+import { Clock, FileText, Users, Calendar, AlertTriangle, Book, Search } from 'lucide-react';
 import { colors, typography, gradients, shadows, touchTarget, borderRadius, spacing } from '../../theme/tokens';
 import type { Screen } from '../../types';
 
@@ -12,9 +12,12 @@ interface HeaderProps {
 
 const navItems: { id: Screen; label: string; icon: typeof Clock | null }[] = [
   { id: 'dashboard', label: 'HOME', icon: null },
+  { id: 'schedule', label: 'SCHEDULE', icon: Calendar },
+  { id: 'dispatch', label: 'DISPATCH', icon: AlertTriangle },
+  { id: 'knowledge', label: 'KNOWLEDGE', icon: Book },
   { id: 'files', label: 'FILES', icon: FileText },
   { id: 'teams', label: 'TEAMS', icon: Users },
-  { id: 'timeclock', label: 'TIME CLOCK', icon: Clock },
+  { id: 'timeclock', label: 'TIME', icon: Clock },
 ];
 
 const Header: React.FC<HeaderProps> = ({ userName, currentScreen, onNavigate, onLogout }) => (
@@ -54,11 +57,8 @@ const Header: React.FC<HeaderProps> = ({ userName, currentScreen, onNavigate, on
           }}
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none';
-            const next = (e.target as HTMLImageElement).nextSibling as HTMLElement;
-            if (next) next.style.display = 'inline';
           }}
         />
-        <span style={{ fontSize: '32px', display: 'none' }}>🔥</span>
         <div>
           <div style={{
             fontSize: '18px',
@@ -145,14 +145,14 @@ const Header: React.FC<HeaderProps> = ({ userName, currentScreen, onNavigate, on
             background: currentScreen === id ? colors.overlayBlack : 'rgba(255,255,255,0.1)',
             color: colors.text,
             border: 'none',
-            padding: '10px 20px',
+            padding: '10px 16px',
             borderRadius: `${borderRadius.sm}px`,
-            fontSize: '13px',
+            fontSize: '12px',
             fontWeight: '500',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: `${spacing.sm}px`,
+            gap: '6px',
             transition: 'all 0.2s ease',
             letterSpacing: '0.5px',
             minHeight: touchTarget.minHeight,
@@ -168,7 +168,7 @@ const Header: React.FC<HeaderProps> = ({ userName, currentScreen, onNavigate, on
             }
           }}
         >
-          {Icon && <Icon size={16} />}
+          {Icon && <Icon size={14} />}
           {label}
         </button>
       ))}
@@ -177,4 +177,3 @@ const Header: React.FC<HeaderProps> = ({ userName, currentScreen, onNavigate, on
 );
 
 export default Header;
-

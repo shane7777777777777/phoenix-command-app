@@ -1,6 +1,6 @@
 import React from 'react';
-import { Clock, FileText, Users, Home, ClipboardList } from 'lucide-react';
-import { colors, touchTarget, borderRadius, spacing, gradients } from '../../theme/tokens';
+import { Home, Calendar, AlertTriangle, Book, FileText } from 'lucide-react';
+import { colors, touchTarget, spacing } from '../../theme/tokens';
 import type { Screen } from '../../types';
 
 interface BottomNavProps {
@@ -8,18 +8,17 @@ interface BottomNavProps {
   onNavigate: (screen: Screen) => void;
 }
 
-const navItems: { id: Screen; label: string; icon: typeof Clock }[] = [
+const navItems: { id: Screen; label: string; icon: typeof Home }[] = [
   { id: 'dashboard', label: 'Home', icon: Home },
-  { id: 'timeclock', label: 'Time', icon: Clock },
-  { id: 'dailylog', label: 'Log', icon: ClipboardList },
+  { id: 'schedule', label: 'Schedule', icon: Calendar },
+  { id: 'dispatch', label: 'Dispatch', icon: AlertTriangle },
+  { id: 'knowledge', label: 'Knowledge', icon: Book },
   { id: 'files', label: 'Files', icon: FileText },
-  { id: 'teams', label: 'Teams', icon: Users },
 ];
 
 /**
- * BottomNav — optional bottom tab navigation for mobile.
- * Currently the app uses the TopMenu/Header for navigation,
- * so this component is available but not wired in by default.
+ * BottomNav -- bottom tab navigation for mobile.
+ * Includes Dashboard, Schedule, Dispatch, Knowledge, and Files.
  */
 const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate }) => (
   <div style={{
@@ -32,6 +31,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate }) => (
     display: 'flex',
     justifyContent: 'space-around',
     padding: `${spacing.sm}px 0`,
+    paddingBottom: `calc(${spacing.sm}px + env(safe-area-inset-bottom, 0px))`,
     zIndex: 900,
   }}>
     {navItems.map(({ id, label, icon: Icon }) => {
@@ -64,4 +64,3 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate }) => (
 );
 
 export default BottomNav;
-
