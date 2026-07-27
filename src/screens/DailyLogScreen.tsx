@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { colors } from '../theme/tokens';
 import { glassCard, inputStyle, screenContainer, redGlowOverlay, screenTitle, sectionHeader, labelStyle, primaryButton } from '../theme/styles';
 import { LanguageContext } from '../i18n/LanguageContext';
+import VoiceDictationButton from '../components/VoiceDictationButton';
 import type { Screen, DailyLogFormData, WorkRow } from '../types';
 
 interface DailyLogScreenProps {
@@ -222,11 +223,17 @@ const DailyLogScreen: React.FC<DailyLogScreenProps> = ({ userName = '', onSubmit
       <div style={glassCard}>
         <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '16px' }}>
           <div>
-            <label style={labelStyle}>{t('log.notes')}</label>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
+              <label style={labelStyle}>{t('log.notes')}</label>
+              <VoiceDictationButton onText={(text) => setNotes(prev => (prev && !prev.endsWith(' ') ? prev + ' ' : prev) + text)} />
+            </div>
             <textarea rows={5} value={notes} onChange={(e) => setNotes(e.target.value)} style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }} />
           </div>
           <div>
-            <label style={labelStyle}>{t('log.materialNeeded')}</label>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
+              <label style={labelStyle}>{t('log.materialNeeded')}</label>
+              <VoiceDictationButton onText={(text) => setMaterialNeeded(prev => (prev && !prev.endsWith(' ') ? prev + ' ' : prev) + text)} />
+            </div>
             <textarea rows={5} value={materialNeeded} onChange={(e) => setMaterialNeeded(e.target.value)} style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }} />
           </div>
         </div>
