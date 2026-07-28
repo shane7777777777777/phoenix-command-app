@@ -77,7 +77,7 @@ test('Azure CSP receives only the configured runtime origin', () => {
   );
   assert.equal(policy.includes('http://127.0.0.1:9120'), false);
   assert.equal(
-    source.globalHeaders['Content-Security-Policy'].includes('gateway.example.com'),
+    source.globalHeaders['Content-Security-Policy'].includes('https://gateway.example.com'),
     false
   );
 });
