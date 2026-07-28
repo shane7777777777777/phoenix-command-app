@@ -1,6 +1,7 @@
 /**
  * Phoenix Command API Layer
- * Connects to Azure Functions for backend operations
+ * Connects to the Phoenix Python runtime (phoenix.runtime.app:gateway, :9120).
+ * Prior Azure Functions backend is superseded; VITE_API_BASE overrides per environment.
  */
 
 // Validation constants — must match backend limits
@@ -8,7 +9,14 @@ const MAX_QUERY_LENGTH = 4000;
 const MAX_DAILY_LOG_LENGTH = 10000;
 const MAX_CLOCK_NOTE_LENGTH = 500;
 
-const API_BASE = import.meta.env.VITE_API_BASE || "https://phoenix-command-func.azurewebsites.net/api";
+const configuredApiBase = String(import.meta.env.VITE_API_BASE || "")
+  .trim()
+  .replace(/\/+$/, "");
+if (!configuredApiBase && !import.meta.env.DEV) {
+  throw new Error("VITE_API_BASE is required for production builds");
+}
+const API_BASE = configuredApiBase
+  || (import.meta.env.DEV ? "http://127.0.0.1:9120" : "");
 const FUNCTION_KEY = import.meta.env.VITE_FUNCTION_KEY || "";
 const API_SCOPE = import.meta.env.VITE_API_SCOPE
   || `api://${import.meta.env.VITE_AZURE_CLIENT_ID || "8b78f443-e000-4689-ad57-71e4e616960f"}/.default`;
@@ -45,7 +53,7 @@ export async function clockInOut({ action, location, note, token }) {
     throw new Error(`Clock note exceeds maximum length of ${MAX_CLOCK_NOTE_LENGTH} characters`);
   }
 
-  const response = await fetch(`${API_BASE}/timeclock`, {
+  const response = await fetch(`${API_BASE}/v1/timeclock`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -91,7 +99,7 @@ export async function submitDailyLog(log, token) {
     throw new Error(`Material needed field exceeds maximum length of ${MAX_DAILY_LOG_LENGTH} characters`);
   }
 
-  const response = await fetch(`${API_BASE}/dailylog`, {
+  const response = await fetch(`${API_BASE}/v1/dailylog`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -133,12 +141,14 @@ export async function askPhoenixAI(query, agents = ["knowledge_keeper"], token =
     headers["x-functions-key"] = FUNCTION_KEY;
   }
 
-  const response = await fetch(`${API_BASE}/orchestrate`, {
+  // Runtime chat rides the tokenless browser bridge /v3/chat (M-1 boundary:
+  // no Phoenix token in the browser). Legacy single-turn shape { message } is
+  // the contract's accepted form; `agents` has no runtime equivalent yet.
+  const response = await fetch(`${API_BASE}/v3/chat`, {
     method: "POST",
     headers,
     body: JSON.stringify({
-      query,
-      agents,
+      message: query,
     }),
   });
 
@@ -146,7 +156,9 @@ export async function askPhoenixAI(query, agents = ["knowledge_keeper"], token =
     throw new Error(`AI query failed: ${response.statusText}`);
   }
 
-  return response.json();
+  const payload = await response.json();
+  // v3 envelope carries the reply in `text`; keep the caller's `.result` contract.
+  return { result: payload.text, ...payload };
 }
 
 /**
@@ -182,4 +194,3 @@ export function getCurrentLocation() {
 }
 
 export { MAX_QUERY_LENGTH, MAX_DAILY_LOG_LENGTH, MAX_CLOCK_NOTE_LENGTH };
-
