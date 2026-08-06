@@ -33,7 +33,7 @@ function isPrivateHostname(hostname) {
     );
   }
 
-  return (
+  return host.includes(':') && (
     host === '::'
     || host === '::1'
     || host.startsWith('fc')
