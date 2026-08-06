@@ -23,9 +23,9 @@ function azureRuntimeCspPlugin(runtimeOrigin) {
   }
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, __dirname, '')
-  const runtime = mode === 'production'
+  const runtime = command === 'build'
     ? requireProductionRuntime(env.VITE_API_BASE)
     : null
 
