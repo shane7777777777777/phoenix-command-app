@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { loadEnv } from 'vite';
 
 import { requireProductionRuntime } from './runtime-origin.js';
 
-const root = resolve(import.meta.dirname, '..');
-const runtime = requireProductionRuntime(process.env.VITE_API_BASE);
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const runtime = requireProductionRuntime(loadEnv('production', root, '').VITE_API_BASE);
 const staticConfig = JSON.parse(
   await readFile(resolve(root, 'dist', 'staticwebapp.config.json'), 'utf8')
 );
