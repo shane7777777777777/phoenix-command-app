@@ -55,6 +55,11 @@ assert.equal(
   false,
   'production bundle must not contain the development-only localhost runtime'
 );
+assert.equal(
+  bundle.includes('x-functions-key'),
+  false,
+  'production bundle must not send an Azure Functions key from the browser'
+);
 
 console.log(JSON.stringify({
   apiBase: runtime.baseUrl,
