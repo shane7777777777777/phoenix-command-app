@@ -1,7 +1,7 @@
 const RECOVERABLE_RECOGNITION_ERRORS = new Set(['no-speech']);
 
 export function normalizeRecognitionError(error) {
-  if (error === 'not-allowed' || error === 'service-not-allowed') {
+  if (error === 'not-allowed') {
     return 'denied';
   }
   return String(error ?? 'unknown');

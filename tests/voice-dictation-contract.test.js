@@ -11,7 +11,7 @@ import {
 
 test('permission errors are normalized while other engine failures stay actionable', () => {
   assert.equal(normalizeRecognitionError('not-allowed'), 'denied');
-  assert.equal(normalizeRecognitionError('service-not-allowed'), 'denied');
+  assert.equal(normalizeRecognitionError('service-not-allowed'), 'service-not-allowed');
   assert.equal(normalizeRecognitionError('audio-capture'), 'audio-capture');
   assert.equal(normalizeRecognitionError(undefined), 'unknown');
 });
