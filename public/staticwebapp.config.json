@@ -7,7 +7,7 @@
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/phoenix-logo.png", "/manifest.json", "/sw.js", "/app-init.js"]
+    "exclude": ["/assets/*", "/phoenix-logo.png", "/icon-192.png", "/icon-512.png", "/manifest.json", "/sw.js", "/app-init.js", "/offline.html"]
   },
   "responseOverrides": {
     "401": {
@@ -19,7 +19,7 @@
     "X-Frame-Options": "DENY",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-    "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://login.microsoftonline.com https://*.azurewebsites.net https://graph.microsoft.com; img-src 'self' data: blob:; frame-src https://login.microsoftonline.com"
+    "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://login.microsoftonline.com https://graph.microsoft.com; img-src 'self' data: blob:; frame-src https://login.microsoftonline.com"
   }
 }
 

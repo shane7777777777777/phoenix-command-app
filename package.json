@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "preview:lan": "vite preview --host 0.0.0.0 --port 4173",
-    "typecheck": "echo 'No TypeScript in this project - skipping'",
+    "typecheck": "tsc --noEmit",
     "lint": "echo 'No linter configured - skipping'",
     "test": "node --test",
     "verify:production": "node build/verify-production-build.js"
@@ -25,6 +25,7 @@
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.7.2",
     "vite": "^6.0.5"
   }
 }

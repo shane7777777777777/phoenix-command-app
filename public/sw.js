@@ -1,7 +1,7 @@
 // Phoenix Command Service Worker
 // Provides offline capability and caching
 
-const CACHE_NAME = 'phoenix-command-v1';
+const CACHE_NAME = 'phoenix-command-v2';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache on install
@@ -9,15 +9,29 @@ const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   '/phoenix-logo.png',
-  '/manifest.json'
+  '/icon-192.png',
+  '/icon-512.png',
+  '/manifest.json',
+  OFFLINE_URL
 ];
 
-// Install event - cache core assets
+// Install event - cache core assets.
+// Each asset is cached independently: one failed fetch must never abort the
+// whole install (cache.addAll rejects wholesale), or the app silently loses
+// offline support.
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[SW] Precaching core assets');
-      return cache.addAll(PRECACHE_ASSETS);
+      return Promise.allSettled(
+        PRECACHE_ASSETS.map((asset) => cache.add(asset))
+      ).then((results) => {
+        results.forEach((result, i) => {
+          if (result.status === 'rejected') {
+            console.warn('[SW] Precache failed for', PRECACHE_ASSETS[i], result.reason);
+          }
+        });
+      });
     })
   );
   // Activate immediately
@@ -66,9 +80,11 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => {
-          // Offline - return cached version
+          // Offline - return cached version, then the app shell, then the
+          // dedicated offline page as a last resort
           return caches.match(request).then((cached) => {
-            return cached || caches.match('/');
+            return cached
+              || caches.match('/').then((shell) => shell || caches.match(OFFLINE_URL));
           });
         })
     );

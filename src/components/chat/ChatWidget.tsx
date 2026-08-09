@@ -56,8 +56,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         position: 'fixed',
         bottom: '24px',
         right: '24px',
-        width: '380px',
-        height: '500px',
+        // Fit phone viewports: 380px overflows a 375px-wide iPhone
+        width: 'min(380px, calc(100vw - 48px))',
+        height: 'min(500px, calc(100vh - 48px))',
         background: gradients.chatPanel,
         backdropFilter: 'blur(40px)',
         WebkitBackdropFilter: 'blur(40px)',

@@ -17,9 +17,10 @@ if (!configuredApiBase && !import.meta.env.DEV) {
 }
 const API_BASE = configuredApiBase
   || (import.meta.env.DEV ? "http://127.0.0.1:9120" : "");
-const FUNCTION_KEY = import.meta.env.VITE_FUNCTION_KEY || "";
+// msalConfig.js validates the Azure env vars at startup and throws if they
+// are missing, so this scope is never built from an undefined client ID.
 const API_SCOPE = import.meta.env.VITE_API_SCOPE
-  || `api://${import.meta.env.VITE_AZURE_CLIENT_ID || "8b78f443-e000-4689-ad57-71e4e616960f"}/.default`;
+  || `api://${import.meta.env.VITE_AZURE_CLIENT_ID}/.default`;
 
 /**
  * Get the current user's access token for API calls
@@ -58,7 +59,6 @@ export async function clockInOut({ action, location, note, token }) {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-      ...(FUNCTION_KEY && { "x-functions-key": FUNCTION_KEY }),
     },
     body: JSON.stringify({
       action,
@@ -104,7 +104,6 @@ export async function submitDailyLog(log, token) {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-      ...(FUNCTION_KEY && { "x-functions-key": FUNCTION_KEY }),
     },
     body: JSON.stringify({
       ...log,
@@ -136,9 +135,6 @@ export async function askPhoenixAI(query, agents = ["knowledge_keeper"], token =
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;
-  }
-  if (FUNCTION_KEY) {
-    headers["x-functions-key"] = FUNCTION_KEY;
   }
 
   // Runtime chat rides the tokenless browser bridge /v3/chat (M-1 boundary:

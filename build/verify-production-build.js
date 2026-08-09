@@ -24,6 +24,14 @@ assert.equal(
   'generated CSP must allow the exact configured runtime origin'
 );
 
+// PWA assets referenced by index.html, manifest.json, and the service worker
+// precache must actually ship — a missing icon 404s the install prompt and
+// breaks the offline precache.
+const distFiles = await readdir(resolve(root, 'dist'));
+for (const asset of ['phoenix-logo.png', 'icon-192.png', 'icon-512.png', 'manifest.json', 'sw.js', 'app-init.js', 'offline.html']) {
+  assert.ok(distFiles.includes(asset), `production build is missing PWA asset ${asset}`);
+}
+
 const assetDirectory = resolve(root, 'dist', 'assets');
 const javascriptAssets = (await readdir(assetDirectory))
   .filter((name) => name.endsWith('.js'));
@@ -46,6 +54,11 @@ assert.equal(
   bundle.includes('http://127.0.0.1:9120'),
   false,
   'production bundle must not contain the development-only localhost runtime'
+);
+assert.equal(
+  bundle.includes('x-functions-key'),
+  false,
+  'production bundle must not send an Azure Functions key from the browser'
 );
 
 console.log(JSON.stringify({

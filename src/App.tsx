@@ -58,11 +58,18 @@ const PhoenixCommandApp: React.FC = () => {
   const [jobFiles, setJobFiles] = useState<{ name: string; type: string; items?: string; size?: string }[]>([]);
   const [sharepointFolders, setSharepointFolders] = useState<string[]>([]);
 
-  // Get user info when authenticated
+  // Get user info when authenticated; honor PWA shortcut deep links
+  // (manifest.json launches /?screen=timeclock and /?screen=dailylog)
   useEffect(() => {
     if (isAuthenticated) {
       setUserName(authUserName);
-      setCurrentScreen('dashboard');
+      const requested = new URLSearchParams(window.location.search).get('screen');
+      const validScreens: Screen[] = ['dashboard', 'timeclock', 'files', 'teams', 'dailylog'];
+      setCurrentScreen(
+        requested && (validScreens as string[]).includes(requested)
+          ? (requested as Screen)
+          : 'dashboard'
+      );
     }
   }, [isAuthenticated, authUserName]);
 
@@ -110,7 +117,9 @@ const PhoenixCommandApp: React.FC = () => {
     setChatMessages(prev => [...prev, { role: 'user', content: userMessage }]);
 
     try {
-      const token = await getApiToken();
+      // The /v3/chat bridge is tokenless (M-1 boundary) — a token acquisition
+      // failure must not take chat down with it.
+      const token = await getApiToken().catch(() => null);
       const response = await askPhoenixAI(userMessage, ['knowledge_keeper', 'servicefusion'], token);
       setChatMessages(prev => [...prev, {
         role: 'ai',
