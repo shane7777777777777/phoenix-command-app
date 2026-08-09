@@ -7,7 +7,7 @@
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/phoenix-logo.png", "/manifest.json", "/sw.js", "/app-init.js"]
+    "exclude": ["/assets/*", "/phoenix-logo.png", "/icon-192.png", "/icon-512.png", "/manifest.json", "/sw.js", "/app-init.js", "/offline.html"]
   },
   "responseOverrides": {
     "401": {
