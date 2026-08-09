@@ -14,7 +14,7 @@ A production-ready PWA that:
 - Reads all Azure identifiers from environment variables with no hardcoded fallbacks
 - Passes `tsc --noEmit`, ESLint, and a basic smoke test in CI (GitHub Actions)
 - Includes the Knowledge Builder screen (calls Phoenix Gateway SDK agent)
-- Includes the billing verification / job progress dashboard for Shane and Stephanie
+- Includes the billing verification / job progress dashboard for Shane and the office manager
 - Deploys cleanly to Azure Static Web Apps via CI
 - Has CLAUDE.md in the repo root for agent governance
 
@@ -39,8 +39,8 @@ A production-ready PWA that:
 
 **Medium term (features):**
 - Add `src/screens/KnowledgeBuilderScreen.tsx` — calls the Knowledge Builder SDK agent through the Phoenix Gateway. Surface: trigger button, progress indicator (30-sec cold start), lesson output display with deep-dive prompt capability.
-- Add `src/screens/BillingDashboardScreen.tsx` — job progress vs. billing verification view (for Shane and Stephanie). Pulls daily log data, flags discrepancies between billed quantities and logged quantities.
-- Add `src/screens/PerformanceScreen.tsx` — tech performance data (for Shane/Stephanie view) and personal data view (for the tech themselves). Transparent, no surprises.
+- Add `src/screens/BillingDashboardScreen.tsx` — job progress vs. billing verification view (for Shane and the office manager). Pulls daily log data, flags discrepancies between billed quantities and logged quantities.
+- Add `src/screens/PerformanceScreen.tsx` — tech performance data (for Shane/office-manager view) and personal data view (for the tech themselves). Transparent, no surprises.
 
 **Long term (platform):**
 - Voice input in the ChatWidget — browser `SpeechRecognition` API for hands-free log entry and AI queries.

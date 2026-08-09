@@ -71,7 +71,7 @@ Cloudflare Tunnel (free) punches outbound from the Mac Studio. No ports opened. 
 |------|-------------------|-----------|
 | Technician | Teams Bot (text + voice) | Phoenix Command App (optional) |
 | Foreman | Teams Bot + PCA for job oversight | |
-| Stephanie | Phoenix Command App (full office) | Teams Bot |
+| Office manager | Phoenix Command App (full office) | Teams Bot |
 | Shane | Everything | Claude Code CLI for engineering |
 
 ---
@@ -102,7 +102,7 @@ Cloudflare Tunnel (free) punches outbound from the Mac Studio. No ports opened. 
 - React + TypeScript + Vite + MSAL Auth + PWA
 - Knowledge Builder page (SDK agent, 30 sec cold start)
 - Job progress tracking, billing verification
-- Performance dashboards (Shane/Stephanie)
+- Performance dashboards (Shane/office manager)
 
 ---
 
@@ -399,7 +399,7 @@ This is a critical feature, not a nice-to-have. Design the system to support voi
 - React + TypeScript + Vite + MSAL Auth + PWA
 - Add: Knowledge Builder page
 - Add: Job progress / billing dashboard
-- Add: Performance review data (for Shane/Stephanie)
+- Add: Performance review data (for Shane/office manager)
 
 ### SharePoint (Phoenix Ops)
 - Job drawings (rotated weekly per schedule)
