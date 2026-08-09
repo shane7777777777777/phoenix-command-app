@@ -110,7 +110,9 @@ const PhoenixCommandApp: React.FC = () => {
     setChatMessages(prev => [...prev, { role: 'user', content: userMessage }]);
 
     try {
-      const token = await getApiToken();
+      // The /v3/chat bridge is tokenless (M-1 boundary) — a token acquisition
+      // failure must not take chat down with it.
+      const token = await getApiToken().catch(() => null);
       const response = await askPhoenixAI(userMessage, ['knowledge_keeper', 'servicefusion'], token);
       setChatMessages(prev => [...prev, {
         role: 'ai',
