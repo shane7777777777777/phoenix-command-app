@@ -7,6 +7,7 @@ import {
   injectConnectSource,
   requireProductionRuntime
 } from './build/runtime-origin.js'
+import { requireProductionAzureConfig } from './build/azure-env.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -28,6 +29,9 @@ export default defineConfig(({ command, mode }) => {
   const runtime = command === 'build'
     ? requireProductionRuntime(env.VITE_API_BASE)
     : null
+  if (command === 'build') {
+    requireProductionAzureConfig(env)
+  }
 
   return {
     plugins: [

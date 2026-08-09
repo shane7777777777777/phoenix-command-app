@@ -2,8 +2,14 @@
  * MSAL Configuration for Phoenix Command App
  * Uses the Phoenix Mail Courier app registration
  */
-const AZURE_CLIENT_ID = import.meta.env.VITE_AZURE_CLIENT_ID || "8b78f443-e000-4689-ad57-71e4e616960f";
-const AZURE_TENANT_ID = import.meta.env.VITE_AZURE_TENANT_ID || "e7d8daef-fd5b-4e0b-bf8f-32f090c7c4d5";
+const AZURE_CLIENT_ID = import.meta.env.VITE_AZURE_CLIENT_ID;
+const AZURE_TENANT_ID = import.meta.env.VITE_AZURE_TENANT_ID;
+if (!AZURE_CLIENT_ID || !AZURE_TENANT_ID) {
+  throw new Error(
+    "Azure AD configuration missing: set VITE_AZURE_CLIENT_ID and VITE_AZURE_TENANT_ID "
+    + "(copy .env.example to .env and fill in the Phoenix app registration values)"
+  );
+}
 const API_SCOPE = import.meta.env.VITE_API_SCOPE || `api://${AZURE_CLIENT_ID}/.default`;
 
 export const msalConfig = {
